@@ -11,6 +11,8 @@ namespace VNH.BE.Domain.SeedWorks
 
         T Add(T entity);
 
+        void AddRange(IEnumerable<T> entities);
+
         T Update(T entity);
 
         void UpdateRange(IEnumerable<T> entities);

@@ -27,6 +27,15 @@ namespace VNH.BE.Infrastructure.Repositories
             return _dbSet.Add(entity).Entity;
         }
 
+        public void AddRange(IEnumerable<T> entities)
+        {
+            foreach(var item in entities)
+            {
+                SetInsert(item);
+            }
+            _dbSet.AddRange(entities);
+        }
+
         public T Update(T entity)
         {
             SetUpdate(entity);
