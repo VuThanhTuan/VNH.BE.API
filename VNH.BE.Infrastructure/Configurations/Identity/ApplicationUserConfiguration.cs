@@ -12,6 +12,8 @@ namespace VNH.BE.Infrastructure.Configurations.Identity
         public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
             builder.Property(o => o.Address).HasMaxLength(500).IsUnicode();
+            builder.Property(o => o.FirstName).HasMaxLength(50).IsUnicode();
+            builder.Property(o => o.LastName).HasMaxLength(50).IsUnicode();
         }
     }
 }
