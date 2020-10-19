@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using VNH.BE.API.Application.Models.Users;
 using VNH.BE.API.Infrastructure.Services;
@@ -11,7 +8,7 @@ namespace VNH.BE.API.Controllers
 {
     [ApiController]
     [Route("api/account/[action]")]
-    public class AccountController: Controller
+    public class AccountController : Controller
     {
         private readonly IAccountService _accountService;
         public AccountController(IAccountService accountService)
@@ -25,14 +22,19 @@ namespace VNH.BE.API.Controllers
         {
             var user = await _accountService.Signin(userLogin.UserName, userLogin.Password);
 
-            if(user == null)
+            if (user == null)
             {
                 return BadRequest("Invalid username or password");
             }
 
             var token = _accountService.CreateToken(user);
 
-            return Ok(token);
+            return Ok(new LoginResponseModel
+            {
+                AccessToken = token,
+                UserId = user.Id,
+                UserName = $"{user.FirstName} {user.LastName}"
+            });
         }
     }
 }

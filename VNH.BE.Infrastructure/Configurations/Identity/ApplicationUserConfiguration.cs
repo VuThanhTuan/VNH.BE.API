@@ -1,8 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using VNH.BE.Domain.Aggregates.Identity;
 
 namespace VNH.BE.Infrastructure.Configurations.Identity

@@ -29,7 +29,7 @@ namespace VNH.BE.Infrastructure.Repositories
 
         public void AddRange(IEnumerable<T> entities)
         {
-            foreach(var item in entities)
+            foreach (var item in entities)
             {
                 SetInsert(item);
             }
@@ -44,7 +44,7 @@ namespace VNH.BE.Infrastructure.Repositories
 
         public void UpdateRange(IEnumerable<T> entities)
         {
-            foreach(var item in entities)
+            foreach (var item in entities)
             {
                 SetUpdate(item);
             }
@@ -72,6 +72,11 @@ namespace VNH.BE.Infrastructure.Repositories
             return _dbSet.Where(predicate).ToList();
         }
 
+        public IQueryable<T> GetAllQueryable()
+        {
+            return _dbSet.AsQueryable();
+        }
+
         private bool HasProperty(string property)
         {
             return _type.GetProperty(property) != null;
@@ -79,12 +84,12 @@ namespace VNH.BE.Infrastructure.Repositories
 
         private void SetInsert(T entity)
         {
-            if(HasProperty("CreatedAt"))
+            if (HasProperty("CreatedAt"))
             {
                 _type.GetProperty("CreatedAt").SetValue(entity, DateTime.UtcNow);
             }
 
-            if(HasProperty("CreatedBy"))
+            if (HasProperty("CreatedBy"))
             {
                 // Todo: Get current User
                 _type.GetProperty("CreatedBy").SetValue(entity, "Admin");

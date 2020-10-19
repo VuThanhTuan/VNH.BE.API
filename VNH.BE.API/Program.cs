@@ -1,15 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
+﻿using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using VNH.BE.API.Infrastructure;
-using VNH.BE.Infrastructure;
+using System.IO;
 
 namespace VNH.BE.API
 {
@@ -18,19 +11,28 @@ namespace VNH.BE.API
         public static void Main(string[] args)
         {
             var host = CreateHostBuilder(args);
-            using (var scope = host.Services.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
-                DataSeeder.SeedUser(context);
-            }
             host.Run();
+            //var host = CreateHostBuilder(args);
+            //host.Build().Run();
         }
 
-        public static IWebHost CreateHostBuilder(string[] args)
+        public static IHost CreateHostBuilder(string[] args)
         {
-            return WebHost.CreateDefaultBuilder(args)
-            .UseStartup<Startup>()
-            .Build();
+            return Host.CreateDefaultBuilder(args)
+                // ASP.NET Core 3.0+:
+                // The UseServiceProviderFactory call attaches the
+                // Autofac provider to the generic hosting mechanism.
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseIISIntegration();
+                }).ConfigureHostConfiguration(configHost =>
+                {
+                    configHost.SetBasePath(Directory.GetCurrentDirectory());
+                    configHost.AddJsonFile("appsettings.json", optional: true);
+                    configHost.AddEnvironmentVariables();
+                }).Build();
         }
 
     }

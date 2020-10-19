@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -34,14 +33,14 @@ namespace VNH.BE.API.Infrastructure.Services
         {
             var user = await _userManager.FindByNameAsync(userName);
 
-            if(user == null)
+            if (user == null)
             {
                 return null;
             }
 
             var result = await _userManager.CheckPasswordAsync(user, password);
 
-            if(result)
+            if (result)
             {
                 return user;
             }

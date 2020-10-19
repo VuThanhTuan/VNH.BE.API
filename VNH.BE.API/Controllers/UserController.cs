@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using VNH.BE.API.Application.Models;
+using VNH.BE.API.Infrastructure.ActionResult;
+using VNH.BE.Domain.Aggregates.Identity;
+using VNH.BE.Infrastructure.Repositories;
 
 namespace VNH.BE.API.Controllers
 {
@@ -12,17 +13,22 @@ namespace VNH.BE.API.Controllers
     [Route("api/users/[action]")]
     public class UserController : Controller
     {
+        private readonly IApplicationUserRepository _repository;
+        public UserController(IApplicationUserRepository repository)
+        {
+            _repository = repository;
+        }
+
         [HttpGet]
         [Authorize]
-        public IActionResult GetTest()
+        public IActionResult GetAllUser(int pageSize, int pageIndex)
         {
-            var list = new List<UserListModel>()
-            {
-                new UserListModel() {Id = 1, UserName = "tuan94cntt"},
-                new UserListModel() {Id = 2, UserName = "Admin"},
-                new UserListModel() {Id = 3, UserName = "Manager"}
-            };
-            return Ok(list);
+            var test = HttpContext.User;
+            var list = _repository.GetAllUser(pageSize, pageIndex);
+            var total = list.Count();
+            var response = new JsonResponse<List<ApplicationUser>>(statusCode: StatusCodes.Status200OK,
+                pageSize: pageSize, pageIndex: pageIndex, count: total, data: list);
+            return Ok(response);
         }
     }
 }

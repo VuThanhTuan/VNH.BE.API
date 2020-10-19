@@ -7,7 +7,7 @@ namespace VNH.BE.Domain.SeedWorks
 {
     public interface IRepository<T, Tkey> where T : class
     {
-        IUnitOfWork UnitOfWork { get;}
+        IUnitOfWork UnitOfWork { get; }
 
         T Add(T entity);
 
@@ -20,6 +20,8 @@ namespace VNH.BE.Domain.SeedWorks
         T GetById(Tkey key);
 
         IQueryable<T> GetBy(Expression<Func<T, bool>> predicate);
+
+        IQueryable<T> GetAllQueryable();
 
         List<T> GetListBy(Expression<Func<T, bool>> predicate);
 
